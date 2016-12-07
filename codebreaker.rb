@@ -11,24 +11,22 @@ module Codebreaker
       @secret_code = random
       @attempts = NUMBER_ATTEMPTS
       @hints = HINTS
-      @exit = nil
+      @exit = false
     end
 
     def random
-      random = ''
-      4.times {random += rand(1..6).to_s}
-      random
-    end
+      (1..4).map {rand(1..6)}
+  end
 
     def guess(code)
-      @code = code
       if @attempts == 0
-        @exit = 1
+        @exit = true
         return @status = 'Game over! You have no more attempts'
       end
+      @code = code.split('').map(&:to_i)
       @attempts -= 1
       if @code == @secret_code
-        @exit = 1
+        @exit = true
         return @status = 'Congratulations, you win!'
       end
     end
@@ -36,27 +34,31 @@ module Codebreaker
     def hint
       return "You don't have any hints." if @hints == 0
       @hints -= 1
-      @secret_code[rand(4)]
+      @secret_code.sample
     end
 
     def game
-      array_code = @code.chars
-      array_secrets = @secret_code.chars
-      @answer = []
-      array_code.zip(array_secrets).each_with_index do |(code, secret_code), index|
+      answer = []
+      array = @code.zip(@secret_code)
+      array.each_with_index do |(code, secret_code), i|
         if code == secret_code
-          @answer[index] = '+'
-        else
-          array_code.each_with_index do |code|
-            @answer[index] = '-' if code == secret_code
+          answer[i] = '+'
+          array[i][0], array[i][1] = nil
+        end
+      end
+      array.each_with_index do |(code, secret_code), i|
+        array.each_with_index do |code, j|
+          if secret_code == array[j][0].to_i
+            answer[i] = '-'
+            array[j][0], array[i][1], secret_code = nil
           end
         end
       end
-      @answer.compact.join('') if @exit == nil
+      answer.join if @exit == false
     end
 
     def exit?
-      @exit ? true : false
+      @exit
     end
 
     def statistik

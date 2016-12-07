@@ -16,7 +16,7 @@ module Codebreaker
           when 'exit'
             return
           when /\A[1-6]{4}\Z/
-            @game.guess(code)
+            puts @game.guess(code)
             puts @game.game
           else
             puts 'You should make a guess of 4 numbers from 1 to 6.'
@@ -27,6 +27,8 @@ module Codebreaker
       play_again
     end
 
+    private
+
     def play_again
       puts 'Would you like to play again? (y/n)'
       exit unless gets.chomp == 'y'
@@ -35,9 +37,9 @@ module Codebreaker
     end
 
     def statisctics
-      puts 'Would you like look statisctics? (y/n)'
+      puts 'Would you like look statisctics? (y,n)'
       return unless gets.chomp == 'y'
-      puts File.open('./statisctics.txt', 'r'){ |f| f.read }
+      File.open('./statisctics.txt', 'r'){ |f| puts f.read }
     end
 
     def save
@@ -47,10 +49,8 @@ module Codebreaker
       @name = gets.chomp
       File.open('./statisctics.txt', 'a') do |f|
         f.puts @name, @game.statistik, Time.now
+        f.puts "------------------------------"
       end
     end
   end
 end
-
-#g = Play.new
-#g.play_game
