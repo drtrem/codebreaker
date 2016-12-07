@@ -14,24 +14,24 @@ module Codebreaker
         expect{play.play_game}.to output(/Codebreaker! Make a guess of 4 numbers from 1 to 6./).to_stdout
       end
 
-      it 'print warning massege if wrong input', skip: true do
+      it 'print warning massege if wrong input' do
         allow(play).to receive(:gets).and_return('12345')
         expect{play.play_game}.to output(/You should type a guess of four numbers from 1 to 6./).to_stdout
       end
 
-      it 'print answer', skip: true do
+      it 'print answer' do
         allow(play).to receive(:gets).and_return('[1,2,3,4]')
         allow(play.instance_variable_get(:@game)).to receive(:guess).and_return('----')
         expect{play.play_game}.to output(/----/).to_stdout
       end
 
-      it 'message hint', skip: true do
+      it 'message hint' do
         allow(play).to receive(:gets).and_return('hint')
         allow(play.instance_variable_get(:@game)).to receive(:hint).and_return('hint')
         expect{play.play_game}.to output(/hint/).to_stdout
       end
 
-      it 'call #guess method', skip: true do
+      it 'call #guess method' do
         allow(play).to receive(:puts)
         allow(play).to receive(:gets).and_return('[1,2,3,4]')
         expect(play.instance_variable_get(:@game)).to receive(:guess)
@@ -63,7 +63,7 @@ module Codebreaker
     end
 
     context '#statisctics' do
-      it 'look statisctics', skip: true do
+      it 'look statisctics' do
         allow(File).to receive(:open)
         allow(play).to receive(:gets).and_return('y')
         expect{play.send(:statisctics)}.to output(/Would you like look statisctics? (y,n)/).to_stdout
@@ -84,7 +84,7 @@ module Codebreaker
         play.send(:save)
       end
 
-      it 'statistics should exist', skip: true do
+      it 'statistics should exist' do
         allow(play).to receive(:puts)
         play.send(:save)
         expect(File.exist?('./statistics.txt')).to eq(true)
