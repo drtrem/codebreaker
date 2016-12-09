@@ -17,7 +17,6 @@ module Codebreaker
             return
           when /\A[1-6]{4}\Z/
             puts @game.guess(code)
-            puts @game.game
           else
             puts 'You should make a guess of 4 numbers from 1 to 6.'
         end
