@@ -16,7 +16,7 @@ module Codebreaker
 
     def random
       (1..4).map {rand(1..6)}
-  end
+    end
 
     def guess(code)
       if @attempts == 0
@@ -28,6 +28,8 @@ module Codebreaker
       if @code == @secret_code
         @exit = true
         return @status = 'Congratulations, you win!'
+      else
+        mark
       end
     end
 
@@ -37,22 +39,22 @@ module Codebreaker
       @secret_code.sample
     end
 
-    def game
+    def mark
+      array_code = Array.new(@code)
+      array_secret_code = Array.new(@secret_code)
       answer = []
-      array = @code.zip(@secret_code)
-      array.each_with_index do |(code, secret_code), i|
-        if code == secret_code
-          answer[i] = '+'
-          array[i][0], array[i][1] = nil
-        end
+      array_code.zip(array_secret_code).each_with_index do |(code, secret_code), i|
+        next if code != secret_code
+          array_secret_code[i], array_code[i] = nil
+          answer << '+'
       end
-      array.each_with_index do |(code, secret_code), i|
-        array.each_with_index do |code, j|
-          if secret_code == array[j][0].to_i
-            answer[i] = '-'
-            array[j][0], array[i][1], secret_code = nil
-          end
-        end
+      array_code.compact!
+      array_secret_code.compact!
+      array_code.map do |code|
+        index = code && array_secret_code.index(code)
+        next unless index
+          array_secret_code[index] = nil
+          answer << '-'
       end
       answer.join if @exit == false
     end
