@@ -30,20 +30,39 @@ module Codebreaker
         expect{game.guess('1234')}.to change{game.attempts}.by(-1)
       end
 
+      it '@code Array' do
+        game.guess('1234')
+        expect(game.instance_variable_get(:@code)).to eq([1,2,3,4])
+      end
+    end
+
+    context '#exit_with_status' do
+      before do
+        game.exit_with_status('message')
+      end
+
+      it 'message' do
+        expect(game.instance_variable_get(:@status)).to eq('message')
+      end
+
+      it '@exit = true' do
+        expect(game.instance_variable_get(:@exit)).to eq(true)
+      end
+
+    end
+
+    context '#win' do
       it 'when win' do
         game.instance_variable_set(:@secret_code, [1,2,3,4])
-        expect(game.guess('1234')).to eq('Congratulations, you win!')
+        game.instance_variable_set(:@code, [1,2,3,4])
+        expect(game.win).to eq('Congratulations, you win!')
       end
+    end
 
+    context '#no_attempts' do
       it 'when game over' do
         game.instance_variable_set(:@attempts, 0)
-        expect(game.guess('1234')).to eq('Game over! You have no more attempts')
-      end
-
-      it '@exit = 1' do
-        game.instance_variable_set(:@exit, 1)
-        game.guess('1234')
-        expect(game.instance_variable_get(:@exit)).to eq(1)
+        expect(game.no_attempts).to eq('Game over! You have no more attempts')
       end
     end
 

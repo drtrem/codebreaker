@@ -19,18 +19,24 @@ module Codebreaker
     end
 
     def guess(code)
-      if @attempts == 0
-        @exit = true
-        return @status = 'Game over! You have no more attempts'
-      end
+      no_attempts
       @code = code.split('').map(&:to_i)
       @attempts -= 1
-      if @code == @secret_code
-        @exit = true
-        return @status = 'Congratulations, you win!'
-      else
-        mark
-      end
+      win
+      mark
+    end
+
+    def exit_with_status(message)
+      @exit = true
+      @status = message
+    end
+
+    def win
+      return exit_with_status('Congratulations, you win!') if @code == @secret_code
+    end
+
+    def no_attempts
+      return exit_with_status('Game over! You have no more attempts') if @attempts == 0
     end
 
     def hint
